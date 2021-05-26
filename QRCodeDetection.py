@@ -64,7 +64,7 @@ def prepareRGBImageForImshowFromIndividualArrays(r,g,b,w,h):
             row.append(triple)
         rgbImage.append(row)
     return rgbImage
-    
+
 
 # This method takes a greyscale pixel array and writes it into a png file
 def writeGreyscalePixelArraytoPNG(output_filename, pixel_array, image_width, image_height):
