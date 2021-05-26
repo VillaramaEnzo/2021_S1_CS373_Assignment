@@ -2,7 +2,9 @@ from matplotlib import pyplot
 
 import imageIO.png
 
+
 # this function reads an RGB color png file and returns width, height, as well as pixel arrays for r,g,b
+
 def readRGBImageToSeparatePixelArrays(input_filename):
     image_reader = imageIO.png.Reader(filename=input_filename)
     # png reader gives us width and height, as well as RGB data in image_rows (a list of rows of RGB triplets)
@@ -11,6 +13,7 @@ def readRGBImageToSeparatePixelArrays(input_filename):
     print("read image width={}, height={}".format(image_width, image_height))
 
     # our pixel arrays are lists of lists, where each inner list stores one row of greyscale pixels
+
     pixel_array_r = []
     pixel_array_g = []
     pixel_array_b = []
@@ -41,7 +44,6 @@ def readRGBImageToSeparatePixelArrays(input_filename):
     return (image_width, image_height, pixel_array_r, pixel_array_g, pixel_array_b)
 
 
-
 def main():
     filename = "./images/contrast/krakow.png"
 
@@ -54,7 +56,7 @@ def main():
     axs1[0].set_title('Input image')
     axs1[0].imshow(pixel_array, cmap='gray')
 
-    #pyplot.show()
+    # pyplot.show()
 
     nr_bins = 64
     dummy_histogram = [0.0 for i in range(nr_bins)]
@@ -64,7 +66,6 @@ def main():
     axs1[1].bar(range(nr_bins), dummy_histogram)
 
     pyplot.show()
-
 
 
 if __name__ == "__main__":
