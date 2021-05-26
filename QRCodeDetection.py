@@ -5,7 +5,7 @@ from matplotlib.patches import Rectangle
 import imageIO.png
 
 
-def createInitializedGreyscalePixelArray(image_width, image_height, initValue = 0):
+def createInitializedGreyscalePixelArray(image_width, image_height, initValue=0):
 
     new_array = [[initValue for x in range(image_width)] for y in range(image_height)]
     return new_array
@@ -52,7 +52,9 @@ def readRGBImageToSeparatePixelArrays(input_filename):
 
 # This method packs together three individual pixel arrays for r, g and b values into a single array that is fit for
 # use in matplotlib's imshow method
-def prepareRGBImageForImshowFromIndividualArrays(r,g,b,w,h):
+
+
+def prepareRGBImageForImshowFromIndividualArrays(r, g, b, w, h):
     rgbImage = []
     for y in range(h):
         row = []
@@ -75,7 +77,6 @@ def writeGreyscalePixelArraytoPNG(output_filename, pixel_array, image_width, ima
     file.close()
 
 
-
 def main():
     filename = "./images/covid19QRCode/poster1small.png"
 
@@ -88,13 +89,12 @@ def main():
     # get access to the current pyplot figure
     axes = pyplot.gca()
     # create a 70x50 rectangle that starts at location 10,30, with a line width of 3
-    rect = Rectangle( (10, 30), 70, 50, linewidth=3, edgecolor='g', facecolor='none' )
+    rect = Rectangle((10, 30), 70, 50, linewidth=3, edgecolor='g', facecolor='none')
     # paint the rectangle over the current plot
     axes.add_patch(rect)
 
     # plot the current figure
     pyplot.show()
-
 
 
 if __name__ == "__main__":
