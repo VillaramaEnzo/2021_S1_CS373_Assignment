@@ -89,8 +89,8 @@ def main():
     # get access to the current pyplot figure
     axes = pyplot.gca()
     # create a 70x50 rectangle that starts at location 10,30, with a line width of 3
-    rect = Rectangle((10, 30), 70, 50, linewidth=3, edgecolor='g', facecolor='none')
-    # paint the rectangle over the current plot
+    rect = Rectangle((20, 30), 100, 100, linewidth=3, edgecolor='g', facecolor='none')
+    # paint the rectangle over the current plot 1
     axes.add_patch(rect)
 
     # plot the current figure
