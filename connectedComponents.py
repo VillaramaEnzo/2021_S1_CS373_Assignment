@@ -1,6 +1,7 @@
 import queueClass as Q
 
 
+# Returns pixel array of only the section thats part of the largest connected component
 def returnMax(d, pixel_array, w, h):
 
     keyofMaxComponent = max(d, key=d.get)
@@ -9,6 +10,8 @@ def returnMax(d, pixel_array, w, h):
 
         for j in range(w):
 
+            # If it is not part of the component set pixel value to 0
+            # Filters out irrelevant pixels that my hinder our identification proccess
             if pixel_array[i][j] != keyofMaxComponent:
 
                 pixel_array[i][j] = 0
