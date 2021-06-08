@@ -1,0 +1,1 @@
+QRCodeDetection is the main project file that you need to run things from

@@ -18,9 +18,10 @@ from tqdm import tqdm
 # I wrote my code across several files to separate each function
 import convertToGreyscale as ctg
 import computeEdges as ce
-import connectedComponents as cc
 import imageFiltering as iF
-
+import thresholding
+import morphologicalOperations as mO
+import connectedComponents as cc
 
 import imageIO.png
 
@@ -83,7 +84,7 @@ def prepareRGBImageForImshowFromIndividualArrays(r, g, b, w, h):
     return rgbImage
 
 
-def prepImage(r, g, b, w, h):
+def calcBox(r, g, b, w, h):
 
     # Converts RGB to Greyscale
     image = ctg.computeGreyscale(r, g, b, w, h)
@@ -106,8 +107,59 @@ def prepImage(r, g, b, w, h):
     for i in tqdm(range(n)):
 
         guassian = iF.guassianFilter(guassian, w, h)
-    
-    return guassian
+
+    image = ctg.scale0to255andQuantize(guassian, w, h)
+
+    image = thresholding.computeThreshold(image, 70, w, h)
+
+    # Applying Morphological Closing ~ Dialation followed by Erosion
+    image = mO.computeDilation(image, w, h)
+    image = mO.computeErosion(image, w, h)
+
+    # Label Connected Components ~ Using BFS
+
+    image = cc.connectedComponents(image, w, h)
+
+    dimensions = determineSize(image, w, h)
+
+    return dimensions
+
+
+def determineSize(image, w, h):
+
+    x, y, width, height = 0, 0, 0, 0
+
+    rows = set()
+
+    columns = set()
+
+    for row in range(h):
+
+        for column in range(w):
+
+            if image[row][column] != 0:
+
+                rows.add(row)
+                columns.add(column)
+
+    rows = list(rows)
+    columns = list(columns)
+
+    min_y = min(rows)
+    max_y = max(rows)
+
+    min_x = min(columns)
+    max_x = max(columns)
+
+    print(min_x, max_x, min_y, max_y)
+
+    height = max_y - min_y
+    width = max_x - min_x
+
+    x = min_x
+    y = min_y
+
+    return [x, y, width, height]
 
 
 # This method takes a greyscale pixel array and writes it into a png file
@@ -126,15 +178,23 @@ def main():
     # each pixel array contains 8 bit integer values between 0 and 255 encoding the color values
     (image_width, image_height, px_array_r, px_array_g, px_array_b) = readRGBImageToSeparatePixelArrays(filename)
 
-    # pyplot.imshow(prepareRGBImageForImshowFromIndividualArrays(px_array_r, px_array_g, px_array_b, image_width, image_height))
+    pyplot.imshow(prepareRGBImageForImshowFromIndividualArrays(px_array_r, px_array_g, px_array_b, image_width, image_height))
 
     # Just copied and edited the prepareRGBImageToSeparatePixelArrays
-    pyplot.imshow(prepImage(px_array_r, px_array_g, px_array_b, image_width, image_height), cmap="gray")
+    # pyplot.imshow(calcBox(px_array_r, px_array_g, px_array_b, image_width, image_height), cmap = 'gray')
+
+    dimensions = calcBox(px_array_r, px_array_g, px_array_b, image_width, image_height)
 
     # get access to the current pyplot figure
     axes = pyplot.gca()
     # create a 70x50 rectangle that starts at location 10,30, 0with a line width of 3
-    rect = Rectangle((10, 30), 70, 50, linewidth=3, edgecolor='g', facecolor='none')
+
+    x = dimensions[0]
+    y = dimensions[1]
+    width = dimensions[2]
+    height = dimensions[3]
+
+    rect = Rectangle((x, y), width, height, linewidth=3, edgecolor='g', facecolor='none')
     # paint the rectangle over the current plot 1
     axes.add_patch(rect)
 

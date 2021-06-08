@@ -1,55 +1,57 @@
 import connectedComponents as cc
 
-image_width = 16
-image_height = 16
-pixel_array = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0],
-        [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-(ccimg, ccsizes) = cc.computeConnectedComponentLabeling(pixel_array, image_width, image_height)
+def test1():
 
-for i in range(len(ccimg)):
-    print(ccimg[i])
+    image_width = 16
+    image_height = 16
+    pixel_array = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-print("label: nr_pixels")
+    (ccimg, ccsizes) = cc.computeConnectedComponentLabeling(pixel_array, image_width, image_height)
 
-for sz in ccsizes.keys():
-    print("{}: {}".format(sz, ccsizes[sz]))
+    for i in range(len(ccimg)):
+        print(ccimg[i])
 
-print()
+    print("label: nr_pixels")
 
+    for sz in ccsizes.keys():
+        print("{}: {}".format(sz, ccsizes[sz]))
 
-image_width = 6
-image_height = 6
-pixel_array = [
-        [1, 1, 0, 1, 1, 0],
-        [1, 0, 0, 1, 1, 0],
-        [0, 0, 0, 0, 1, 1],
-        [0, 0, 0, 1, 1, 0],
-        [1, 0, 0, 0, 1, 0],
-        [1, 0, 1, 1, 1, 0],
-        ]
+    print()
 
-(ccimg, ccsizes) = cc.computeConnectedComponentLabeling(pixel_array, image_width, image_height)
+    image_width = 6
+    image_height = 6
+    pixel_array = [
+            [1, 1, 0, 1, 1, 0],
+            [1, 0, 0, 1, 1, 0],
+            [0, 0, 0, 0, 1, 1],
+            [0, 0, 0, 1, 1, 0],
+            [1, 0, 0, 0, 1, 0],
+            [1, 0, 1, 1, 1, 0],
+            ]
 
-for i in range(len(ccimg)):
-    print(ccimg[i])
+    (ccimg, ccsizes) = cc.computeConnectedComponentLabeling(pixel_array, image_width, image_height)
 
-print("label: nr_pixels")
+    for i in range(len(ccimg)):
+        print(ccimg[i])
 
-for sz in ccsizes.keys():
-    print("{}: {}".format(sz, ccsizes[sz]))
+    print("label: nr_pixels")
+
+    for sz in ccsizes.keys():
+        print("{}: {}".format(sz, ccsizes[sz]))

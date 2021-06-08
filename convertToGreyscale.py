@@ -75,7 +75,7 @@ def computeMinMax(array, image_height):
 def scale0to255andQuantize(image, image_width, image_height):
 
     minMax = computeMinMax(image, image_height)
-    print(minMax)
+
     grey = []
 
     for i in range(image_height):

@@ -1,167 +1,81 @@
-from collections import Counter
+import queueClass as Q
 
 
-def mergelists(lists):
+def returnMax(d, pixel_array, w, h):
 
-    lists = sorted([sorted(x) for x in lists])
+    keyofMaxComponent = max(d, key=d.get)
 
-    resultlist = []
+    for i in range(h):
 
-    if len(lists) >= 1:
+        for j in range(w):
 
-        resultlist = [lists[0]]
+            if pixel_array[i][j] != keyofMaxComponent:
 
-        if len(lists) > 1:
+                pixel_array[i][j] = 0
 
-            for lst in lists[1:]:
 
-                listset = set(lst)
-
-                merged = False
-
-                for index in range(len(resultlist)):
-
-                    rset = set(resultlist[index])
-
-                    if len(listset & rset) != 0:
-
-                        resultlist[index] = list(listset | rset)
-
-                        merged = True
-
-                        break
-
-                if not merged:
-
-                    resultlist.append(lst)
-
-    resultlist = [list(set(x)) for x in resultlist]
-
-    return resultlist
-
-
-def assignlabelsReturnConflicts(pixel_array, image_width, image_height):
-
-    c = 0   # current label
-
-    conflicts = set()
-
-    for i in range(image_height):
-
-        # print(pixel_array[i])
-
-        for j in range(image_width):
-
-            try:
-
-                if i == 0:
-
-                    if pixel_array[i][j] == 1 and pixel_array[i][j - 1] == 0:
-
-                        c += 1
-
-                        pixel_array[i][j] = c
-
-                    elif pixel_array[i][j] == 1 and pixel_array[i][j - 1] >= 1:
-
-                        pixel_array[i][j] = pixel_array[i][j - 1]
-
-                        conflicts.add((pixel_array[i][j], pixel_array[i][j - 1]))
-
-                    elif pixel_array[i][j] == 0:
-
-                        pixel_array[i][j] = 0
-
-                elif j == 0:
-
-                    if pixel_array[i][j] == 1 and pixel_array[i - 1][j] == 0:
-
-                        c += 1
-
-                        pixel_array[i][j] = c
-
-                    elif pixel_array[i][j] == 1 and pixel_array[i - 1][j] >= 1:
-
-                        pixel_array[i][j] = pixel_array[i - 1][j]
-
-                        conflicts.add((pixel_array[i][j], pixel_array[i - 1][j]))
-
-                    elif pixel_array[i][j] == 0:
-
-                        pixel_array[i][j] = 0
-
-                else:
-
-                    if (pixel_array[i][j] == 1 and pixel_array[i][j - 1] >= 1 and pixel_array[i - 1][j] >= 1):
-
-                        pixel_array[i][j] = min(pixel_array[i][j - 1], pixel_array[i - 1][j])
-
-                        conflicts.add((pixel_array[i][j - 1], pixel_array[i - 1][j]))
-
-                    elif (pixel_array[i][j] == 1 and pixel_array[i][j - 1] >= 1):
-
-                        pixel_array[i][j] = pixel_array[i][j - 1]
-
-                    elif (pixel_array[i][j] == 1 and pixel_array[i - 1][j]):
-
-                        pixel_array[i][j] = pixel_array[i - 1][j]
-
-                    elif (pixel_array[i][j] == 1 and (pixel_array[i][j - 1] == 0 and pixel_array[i - 1][j] == 0)):
-
-                        c += 1
-
-                        pixel_array[i][j] = c
-
-                    elif pixel_array[i][j] == 0:
-
-                        pixel_array[i][j] = 0
-
-            except IndexError:
-
-                pass
-
-    return conflicts
-
-
-def sortlabels(components, pixel_array, image_width, image_height):
-
-    for i in range(image_height):
-
-        for j in range(image_width):
-
-            if pixel_array[i][j] in [x for v in components.values() for x in v]:
-
-                vals = [x for s2 in [sl for sl in components.values() if pixel_array[i][j] in sl] for x in s2]
-
-                for key, value in components.items():
-
-                    if vals == value:
-
-                        pixel_array[i][j] = key
-
-    count = dict(Counter([val for numbers in pixel_array for val in numbers if val != 0]))
-
-    return count
-
-
-def computeConnectedComponentLabeling(pixel_array, image_width, image_height):
-
-    conflicts = list(assignlabelsReturnConflicts(pixel_array, image_width, image_height))
-
-    conflicts = [list(x) for x in conflicts]
-
-    conflicts = mergelists(conflicts)
-
-    components = dict()
+def connectedComponents(pixel_array, w, h):
 
     label = 1
 
-    for i in range(len(conflicts)):
+    dict = {}
 
-        components[label] = conflicts[i]
+    labels = pixel_array
 
-        label += 1
+    visited = set()
 
-    no_components = sortlabels(components, pixel_array, image_width, image_height)
+    q = Q.Queue()
 
-    return (pixel_array, no_components)
+    for row in range(h - 1):
+
+        for column in range(w - 1):
+
+            if pixel_array[row][column] != 0 and (row, column) not in visited:
+
+                dict[label] = 0
+
+                q.enqueue((row, column))
+                visited.add((row, column))
+
+                while not q.isEmpty():
+
+                    val = q.dequeue()
+
+                    labels[val[0]][val[1]] = label
+
+                    dict[label] += 1
+
+                    if val[1] > 0:
+
+                        if pixel_array[val[0]][val[1] - 1] != 0 and (val[0], val[1] - 1) not in visited:
+
+                            q.enqueue((val[0], val[1] - 1))
+
+                            visited.add((val[0], val[1] - 1))
+
+                    if val[1] < w - 1:
+
+                        if pixel_array[val[0]][val[1] + 1] != 0 and (val[0], val[1] + 1) not in visited:
+
+                            q.enqueue((val[0], val[1] + 1))
+                            visited.add((val[0], val[1] + 1))
+
+                    if val[0] > 0:
+
+                        if pixel_array[val[0] - 1][val[1]] != 0 and (val[0] - 1, val[1]) not in visited:
+
+                            q.enqueue((val[0] - 1, val[1]))
+                            visited.add((val[0] - 1, val[1]))
+
+                    if val[0] < h - 1:
+
+                        if pixel_array[val[0] + 1][val[1]] != 0 and (val[0] + 1, val[1]) not in visited:
+
+                            q.enqueue((val[0] + 1, val[1]))
+                            visited.add((val[0] + 1, val[1]))
+
+                label += 1
+
+    returnMax(dict, pixel_array, w, h)
+
+    return pixel_array
