@@ -1,14 +1,28 @@
+"""
+Written by: Enzo Villarama
+UPI: evil629
+
+Contents:
+
+This is the main driver code for my QR Scanner/Decoder App
+I have chose to write my functions over multiple files in order to separate each function ~ Which for my workflow helps me to debug easier
+
+"""
+
 
 from matplotlib import pyplot
 from matplotlib.patches import Rectangle
+from tqdm import tqdm
+# from pyzbar.pyzbar import decode
+
+# I wrote my code across several files to separate each function
+import convertToGreyscale as ctg
+import computeEdges as ce
+import connectedComponents as cc
+import imageFiltering as iF
+
 
 import imageIO.png
-
-
-def createInitializedGreyscalePixelArray(image_width, image_height, initValue=0):
-
-    new_array = [[initValue for x in range(image_width)] for y in range(image_height)]
-    return new_array
 
 
 # this function reads an RGB color png file and returns width, height, as well as pixel arrays for r,g,b
@@ -18,7 +32,7 @@ def readRGBImageToSeparatePixelArrays(input_filename):
     # png reader gives us width and height, as well as RGB data in image_rows (a list of rows of RGB triplets)
     (image_width, image_height, rgb_image_rows, rgb_image_info) = image_reader.read()
 
-    print("read image width={}, height={}".format(image_width, image_height))
+    print("read image width = {}, height = {}".format(image_width, image_height))
 
     # our pixel arrays are lists of lists, where each inner list stores one row of greyscale pixels
     pixel_array_r = []
@@ -65,7 +79,35 @@ def prepareRGBImageForImshowFromIndividualArrays(r, g, b, w, h):
             triple.append(b[y][x])
             row.append(triple)
         rgbImage.append(row)
+
     return rgbImage
+
+
+def prepImage(r, g, b, w, h):
+
+    # Converts RGB to Greyscale
+    image = ctg.computeGreyscale(r, g, b, w, h)
+
+    # Scales Greyscale data to 8bit (0 - 255 bit range)
+    image = ctg.scale0to255andQuantize(image, w, h)
+
+    # Determines horizontal and vertical edges
+    horizontal = ce.computeHorizontalEdges(image, w, h)
+    vertical = ce.computeVerticalEdges(image, w, h)
+
+    # Calculates gradient magnitude
+    gradient = ce.computeGradient(horizontal, vertical)
+
+    # Applies Gussian blur
+    guassian = iF.guassianFilter(gradient, w, h)
+
+    n = 10  # Number of times you want to apply the guassian filter
+
+    for i in tqdm(range(n)):
+
+        guassian = iF.guassianFilter(guassian, w, h)
+    
+    return guassian
 
 
 # This method takes a greyscale pixel array and writes it into a png file
@@ -84,12 +126,15 @@ def main():
     # each pixel array contains 8 bit integer values between 0 and 255 encoding the color values
     (image_width, image_height, px_array_r, px_array_g, px_array_b) = readRGBImageToSeparatePixelArrays(filename)
 
-    pyplot.imshow(prepareRGBImageForImshowFromIndividualArrays(px_array_r, px_array_g, px_array_b, image_width, image_height))
+    # pyplot.imshow(prepareRGBImageForImshowFromIndividualArrays(px_array_r, px_array_g, px_array_b, image_width, image_height))
+
+    # Just copied and edited the prepareRGBImageToSeparatePixelArrays
+    pyplot.imshow(prepImage(px_array_r, px_array_g, px_array_b, image_width, image_height), cmap="gray")
 
     # get access to the current pyplot figure
     axes = pyplot.gca()
-    # create a 70x50 rectangle that starts at location 10,30, with a line width of 3
-    rect = Rectangle((20, 30), 100, 100, linewidth=3, edgecolor='g', facecolor='none')
+    # create a 70x50 rectangle that starts at location 10,30, 0with a line width of 3
+    rect = Rectangle((10, 30), 70, 50, linewidth=3, edgecolor='g', facecolor='none')
     # paint the rectangle over the current plot 1
     axes.add_patch(rect)
 

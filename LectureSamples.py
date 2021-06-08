@@ -28,11 +28,11 @@ def readRGBImageToSeparatePixelArrays(input_filename):
         for elem in range(len(row)):
             # RGB triplets are stored consecutively in image_rows
             if elem % 3 == 0:
-                r = row[elem]
+                r = row[elem] * 0.299
             elif elem % 3 == 1:
-                g = row[elem]
+                g = row[elem] * 0.587
             else:
-                b = row[elem]
+                b = row[elem] * 0.114
                 pixel_row_r.append(r)
                 pixel_row_g.append(g)
                 pixel_row_b.append(b)
