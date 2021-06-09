@@ -1,8 +1,11 @@
 # 2021_S1_CS373_Assignment
 
-This repository provides a Python 3 code skeleton for the image processing assignment of CompSci 373 in Semester 1, 2021. 
+Forked project skeleton code ~ 
+=============================================================
 
-This assignment will require you to use what we have studied in the image processing lectures to generate a software that detects QR codes in images - a technology that we are using daily when scanning QR codes with the COVID19 tracer app.
+This was my submission for my Image Proccessing Assignment for COMPSCI 373 Semester 1 2020
 
-You will receive 10 marks for solving the QR code detection problem, and there will be an additional component for 5 marks, where you will extend upon the QR code detection, and write a short reflective report about your extension.
+This required me to use what was studied from class in order to generate a software that detects QR codes in images -  Essentially just draws a box around a QR code in an image to identify that it is there
 
+~ Wanted to implement actual functionality to it, but didnt get time to. 
+~ Will revisit and probably start a new version from scratch
