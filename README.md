@@ -1,6 +1,7 @@
 # 2021_S1_CS373_Assignment
 
 Forked project skeleton code ~ 
+
 =============================================================
 
 This was my submission for my Image Proccessing Assignment for COMPSCI 373 Semester 1 2020
